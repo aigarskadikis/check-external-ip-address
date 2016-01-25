@@ -254,19 +254,16 @@ fi
 
 #!/bin/sh
 externalip=$(wget -qO- http://echoip.com/)
-tail -2 $db | grep $externalip
-if [ $? -eq 0 ]
+tail -1 $db | grep $externalip
+if [ $? -ne 0 ]
 then
-echo "IP address has not changed"
-else
 echo "Your Pi has now $externalip"
 echo $externalip>> $db
+#lets send emails to all people in "maintenance" file
+emails=$(cat ../maintenance | sed '$aend of file')
+printf %s "$emails" | while IFS= read -r onemail
+do {
+python ../send-email.py "$onemail" "Your Pi has new IP address" "$externalip"
+} done
 fi
-							#lets send emails to all people in "maintenance" file
-							emails=$(cat ../maintenance | sed '$aend of file')
-							printf %s "$emails" | while IFS= read -r onemail
-							do {
-								python ../send-email.py "$onemail" "Your Pi has new IP address" "$externalip"
-							} done
-	
 rm $tmp -rf > /dev/null
