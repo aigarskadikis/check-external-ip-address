@@ -254,7 +254,7 @@ fi
 
 #!/bin/sh
 externalip=$(wget -qO- http://echoip.com/)
-tail -1 $db | grep $externalip
+tail -2 $db | grep $externalip
 if [ $? -eq 0 ]
 then
 echo "IP address has not changed"
