@@ -55,7 +55,7 @@ if [ ! -d "../gd" ]; then
 fi
 
 #!/bin/sh
-externalip=$(wget -qO- http://echoip.com/)
+externalip=$(wget -qO- http://ipecho.net/ | grep "h1.*IP.*h1" | sed "s/<\| /\n/g" | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+")
 tail -1 $db | grep $externalip
 if [ $? -ne 0 ]
 then
